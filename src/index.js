@@ -12,14 +12,14 @@ app.use(cors());
 
 // Routes
 
-app.get("/rides", controllerRide.List);
-app.post("/rides", controllerRide.Insert);
-app.delete("/rides/:ride_id", controllerRide.Delete);
-app.put("/rides/:ride_id/finish", controllerRide.Finish);
-app.get("/rides/drivers/:driver_user_id", controllerRide.ListForDriver);
-app.get("/rides/:ride_id", controllerRide.ListDetails);
-app.put("/rides/:ride_id/accept", controllerRide.Accept);
-app.put("/rides/:ride_id/cancel", controllerRide.Cancel);
+app.get("/rides/list", controllerRide.List);
+app.post("/rides/insert", controllerRide.Insert);
+app.delete("/rides/delete/:ride_id", controllerRide.Delete);
+app.put("/rides/finish/:ride_id", controllerRide.Finish);
+app.get("/rides/list_for_driver/:driver_user_id", controllerRide.ListForDriver);
+app.get("/rides/details/:ride_id", controllerRide.ListDetails);
+app.put("/rides/accept/:ride_id", controllerRide.Accept);
+app.put("/rides/cancel/:ride_id", controllerRide.Cancel);
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`)
