@@ -1,7 +1,8 @@
 Levantamento de requisitos e regras de negócios
 ##
 Rotas - Projeto EasyCar
-##------------------------------------------------------------------------ 
+##
+
 [X] Consultar se existe corrida pendente (hoje) para o usuario logado
     GET -> /rides
     Filtros: passenger_user_id, pickup_date, ride_id, driver_user_id, status
@@ -15,7 +16,8 @@ Rotas - Projeto EasyCar
 [X] Finalizar uma carona que foi concluida
     PUT -> /rides/123/finish
     Body: passenger_user_id
-## ------------------------------------------------------------------------ 
+## 
+
 [X] Consultar as corridas para o motorista (corridas dele + corridas pendentes sem motorista)
     GET -> /rides/drivers/456
 
