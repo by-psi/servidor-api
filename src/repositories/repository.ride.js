@@ -39,10 +39,19 @@ async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, sta
   return rides;
 }
 
+// async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
+//   let ssql = `insert into rides (passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, pickup_date, status) `
+//   ssql += `values (?, ?, ?, ?, ?, CURRENT_DATE, 'P') returning ride_id `
+//   const ride = await execute(ssql, [passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address])
+//   return ride[0];
+// }
+
 async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
-  let ssql = `insert into rides (passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, pickup_date, status) `
-  ssql += `values (?, ?, ?, ?, ?, CURRENT_DATE, 'P') returning ride_id `
-  const ride = await execute(ssql, [passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address])
+  let dt = new Date().toISOString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 10); // data e hora local
+  let ssql = `insert into rides(passenger_user_id, pickup_address, `;
+  ssql += `pickup_latitude, pickup_longitude, dropoff_address, pickup_date, status) `;
+  ssql += `values(?, ?, ?, ?, ?, ?, 'P') returning ride_id `;
+  const ride = await execute(ssql, [passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, dt]);
   return ride[0];
 }
 
@@ -58,23 +67,36 @@ async function Finish(ride_id, passenger_user_id) {
   return {ride_id};
 }
 
-async function ListForDriver(driver_user_id) {
+// async function ListForDriver(driver_user_id) {
+//   let ssql = `select r.*, u.name as passenger_name, u.phone as passenger_phone `;
+//   ssql += `from rides r `;
+//   ssql += `join users u on (u.user_id = r.passenger_user_id) `;
+//   ssql += `where r.pickup_date = CURRENT_DATE `
+//   ssql += `and r.driver_user_id = ? `;
+//   ssql += `UNION `;
+//   ssql += `select r.*, u.name as passenger_name, u.phone as passenger_phone `;
+//   ssql += `from rides r `;
+//   ssql += `join users u on (u.user_id = r.passenger_user_id) `;
+//   ssql += `where r.pickup_date = CURRENT_DATE `
+//   ssql += `and r.driver_user_id is null `;
+//   const rides = await execute(ssql, [driver_user_id])
+//   return rides;
+// }
+
+async function ListForDriver(driver_user_id, dt) {
 
   let ssql = `select r.*, u.name as passenger_name, u.phone as passenger_phone `;
   ssql += `from rides r `;
   ssql += `join users u on (u.user_id = r.passenger_user_id) `;
-  ssql += `where r.pickup_date = CURRENT_DATE `
-  ssql += `and r.driver_user_id = ? `;
-
+  ssql += `where r.pickup_date = ${dt} `; // o parâmetro "dt" foi previamente configurado com a data com fuso local
+  ssql += `and  r.driver_user_id = ? `;
   ssql += `UNION `;
-
-  ssql += `select r.*, u.name as passenger_name, u.phone as passenger_phone `;
-  ssql += `from rides r `;
-  ssql += `join users u on (u.user_id = r.passenger_user_id) `;
-  ssql += `where r.pickup_date = CURRENT_DATE `
-  ssql += `and r.driver_user_id is null `;
-
-  const rides = await execute(ssql, [driver_user_id])
+  ssql += `select r.*, u.name as passenger_name, u.phone as passenger_phone`
+  ssql += `from rides r `
+  ssql += `join users u on (u.user_id = r.passenger_user_id) `
+  ssql += `where r.pickup_date = ${dt} `
+  ssql += `and  r.driver_user_id is null `;
+  const rides = await execute(ssql, [driver_user_id]);
   return rides;
 }
 
