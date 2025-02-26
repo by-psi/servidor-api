@@ -1,9 +1,11 @@
+/** src/controllers/controller.ride.js */
+
 import serviceRide from "../services/service.ride.js";
 
 async function List(req, res) {
   try {
-    const { passenger_user_id, pickup_date, ride_id, driver_user_id, status } = req.query;
-    const rides = await serviceRide.List(passenger_user_id, pickup_date, ride_id, driver_user_id, status);
+    const { passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not } = req.query;
+    const rides = await serviceRide.List(passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not);
     res.status(200).json(rides);
   } catch (error) {
     res.status(500).json({error});
@@ -43,8 +45,9 @@ async function Finish(req, res) {
 
 async function ListForDriver(req, res) {
   try {
-    const driver_user_id = req.params.driver_user_id;
-    const rides = await serviceRide.ListForDriver(driver_user_id);
+    const driver_user_id = req.query.driver_user_id;  // Acessando os parâmetros via query
+    const dt = req.query.dt;  // Acessando a data via query
+    const rides = await serviceRide.ListForDriver(driver_user_id, dt);
     res.status(200).json(rides);
   } catch (error) {
     res.status(500).json({error});

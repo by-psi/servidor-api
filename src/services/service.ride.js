@@ -1,14 +1,11 @@
+/** src/services/service.ride.js */
+
 import repositoryRide from "../repositories/repository.ride.js";
 
-async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status) {
-  const rides = await repositoryRide.List(passenger_user_id, pickup_date, ride_id, driver_user_id, status);
+async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not) {
+  const rides = await repositoryRide.List(passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not);
   return rides;
 }
-
-// async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
-//   const ride = await repositoryRide.Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address);
-//   return ride;
-// }
 
 async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
   // Validacao: O usuario so pode pedir uma carona por vez
@@ -30,13 +27,8 @@ async function Finish(ride_id, passenger_user_id) {
   return ride;
 }
 
-// async function ListForDriver(driver_user_id) {
-//   const rides = await repositoryRide.ListForDriver(driver_user_id);
-//   return rides;
-// }
 
-async function ListForDriver(driver_user_id) {
-  const dt = new Date().toISOString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 10);
+async function ListForDriver(driver_user_id, dt) {
   const rides = await repositoryRide.ListForDriver(driver_user_id, dt);
   return rides;
 }
