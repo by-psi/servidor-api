@@ -45,12 +45,11 @@ async function Finish(req, res) {
 
 async function ListForDriver(req, res) {
   try {
-    const driver_user_id = req.query.driver_user_id;  // Acessando os parâmetros via query
-    const dt = req.query.dt;  // Acessando a data via query
-    const rides = await serviceRide.ListForDriver(driver_user_id, dt);
-    res.status(200).json(rides);
+      const { driver_user_id } = req.params;
+      const rides = await serviceRide.ListForDriver(driver_user_id);
+      res.status(200).json(rides);
   } catch (error) {
-    res.status(500).json({error});
+      res.status(500).json({error});
   }
 }
 

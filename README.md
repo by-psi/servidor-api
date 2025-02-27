@@ -35,7 +35,7 @@ Rotas - Projeto EasyCar
 Business Rules (Regras de Negocio)
 ----------------------------------------
 
-[x] O usuario so pode pedir uma carona por vez
+[X] O usuario so pode pedir uma carona por vez
 
-[x] O motorista só pode aceitar uma carona por vez
+[X] O motorista só pode aceitar uma carona por vez
 

@@ -10,8 +10,8 @@ async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, sta
 async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
   // Validacao: O usuario so pode pedir uma carona por vez
   const dt = new Date().toISOString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 10);
-  const searchRides = await List(passenger_user_id, dt, null, null, null, "P");
-  if (searchRides.length > 0)
+  const searchRides = await List(passenger_user_id, dt, null, null, null, "F");
+  if (searchRides.length > 0) 
     throw "Você já possui uma carona pendente no dia de hoje";
   const ride = await repositoryRide.Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address);
   return ride;
@@ -27,13 +27,17 @@ async function Finish(ride_id, passenger_user_id) {
   return ride;
 }
 
-
-async function ListForDriver(driver_user_id, dt) {
+async function ListForDriver(driver_user_id) {
+  const dt = new Date().toISOString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 10);
   const rides = await repositoryRide.ListForDriver(driver_user_id, dt);
   return rides;
 }
 
 async function Accept(ride_id, driver_user_id) {
+  const dt = new Date().toISOString("pt-BR", { timeZone: "America/Sao_Paulo" }).substring(0, 10);
+  const searchRides = await List(null, dt, null, driver_user_id, "A", null );
+  if (searchRides.length > 0)
+    throw "Você já aceitou uma corrida (em aberto) para: " + searchRides[0].passenger_name;
   const ride = await repositoryRide.Accept(ride_id, driver_user_id);
   return ride;
 }

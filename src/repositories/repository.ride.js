@@ -6,7 +6,7 @@ async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, sta
   let filtro = [];
   let ssql = `select r.*, `;
   ssql += `u.name as passenger_name, u.phone as passenger_phone, `;
-  ssql += `d.name as drive_name, d.phone as driver_phone `;
+  ssql += `d.name as driver_name, d.phone as driver_phone `;
   ssql += `from rides r `;
   ssql += `join users u on (u.user_id = r.passenger_user_id) `;
   ssql += `left join users d on (d.user_id = r.driver_user_id) `;
@@ -71,18 +71,20 @@ async function ListForDriver(driver_user_id, dt) {
   let ssql = `select r.*, u.name as passenger_name, u.phone as passenger_phone `;
   ssql += `from rides r `;
   ssql += `join users u on (u.user_id = r.passenger_user_id) `;
-  ssql += `where r.pickup_date = ? `;
+  ssql += `where r.pickup_date = CURRENT_DATE `;
+  // ssql += `where r.pickup_date = ? `;
   ssql += `and r.driver_user_id = ? `;
   ssql += `UNION `;
   ssql += `select r.*, u.name as passenger_name, u.phone as passenger_phone `;
   ssql += `from rides r `;
   ssql += `join users u on (u.user_id = r.passenger_user_id) `;
-  ssql += `where r.pickup_date = ? `;
-  ssql += `and r.driver_user_id is null`;
-
-  const rides = await execute(ssql, [dt, driver_user_id, dt]);
+  ssql += `where r.pickup_date = CURRENT_DATE `
+  // ssql += `where r.pickup_date = ? `;
+  ssql += `and r.driver_user_id is null `
+  const rides = await execute(ssql, [driver_user_id]);
   return rides;
 }
+
 async function Accept(ride_id, driver_user_id) {
   let ssql = `update rides set status = 'A', driver_user_id = ? where ride_id = ? `
   await execute(ssql, [driver_user_id, ride_id])
